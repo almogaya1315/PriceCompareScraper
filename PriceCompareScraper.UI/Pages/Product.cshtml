@@ -1,0 +1,37 @@
+﻿@page
+@model PriceCompareScraper.UI.Pages.ProductModel
+@{
+    ViewData["Title"] = @Model.Title;
+}
+
+<div class="text-center">
+    <h1>@Model.Title</h1>
+    <div class="product-details">
+        <div class="img-wrap">
+            <img src="/@Model.Image" alt="@Model.Title" />
+        </div>
+        <div class="price-table">
+            <h2>Prices</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Site</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var priceSite in Model.PriceSites)
+                    {
+                        <tr>
+                            <td>@priceSite.Key</td>
+                            <td>@priceSite.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a class="btn btn-secondary" href="/">◀ Back to Gallery</a>
+    </div>
+</div>

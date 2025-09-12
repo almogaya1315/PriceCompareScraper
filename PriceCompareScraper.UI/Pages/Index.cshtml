@@ -1,13 +1,45 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Appliance Gallery";
 }
 
+
+
 <div class="text-center">
+    <h1>Appliance Gallery</h1>
+
     <div class="pager">
         <div class="img-wrap">
-            <img src="/@Model."/>
+            <h1>@Model.Title</h1>
+            <a href="/Product?id=@Model.Index">
+                <img src="/@Model.CurrentImage" alt="Index: @Model.Index" />
+            </a>
+            <div>
+                <a href="/Product?id=@Model.Index">View Prices</a>
+            </div>
+        </div>
+        <div class="controls">
+            @if (Model.Index > 0)
+            {
+                <a class="btn" href="?Index=@(Model.Index - 1)">◀ Previous</a>
+            }
+            else
+            {
+                <button class="btn disabled" disabled>◀ Previous</button>
+            }
+
+            <span class="counter">@((Model.Index + 1))</span>
+
+            @if (Model.Index < Model.Count - 1)
+            {
+                <a class="btn" href="?Index=@(Model.Index + 1)">Next ▶</a>
+            }
+            else
+            {
+                <button class="btn disabled" disabled>Next ▶</button>
+            }
+
         </div>
     </div>
 </div>

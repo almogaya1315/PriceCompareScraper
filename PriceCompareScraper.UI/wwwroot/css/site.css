@@ -45,3 +45,126 @@ body {
         object-fit: contain;
         border-radius: 8px;
     }
+
+.controls {
+    margin-top: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn {
+    padding: 8px 14px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+    .btn:hover {
+        background: #1e4fd8;
+    }
+
+    .btn.disabled {
+        background: #cbd5e1;
+        color: #64748b;
+        cursor: default;
+    }
+
+.counter {
+    font-weight: 600;
+    color: #334155;
+}
+
+/*Product*/
+.product-details {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+    .product-details .img-wrap {
+        flex-shrink: 0;
+    }
+
+        .product-details .img-wrap img {
+            max-width: 400px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+.price-table {
+    text-align: left;
+}
+
+    .price-table h2 {
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    .price-table table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .price-table th, .price-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .price-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .price-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .price-table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+.btn-secondary {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #6c757d;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .product-details {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+        .product-details .img-wrap img {
+            max-width: 100%;
+        }
+
+    .price-table {
+        width: 90%;
+    }
+}
