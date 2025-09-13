@@ -49,7 +49,7 @@ namespace PriceCompareScraper.Core.Services
 
             using var pw = await Playwright.CreateAsync();
             await using var browser = await pw.Chromium.LaunchAsync(
-                new BrowserTypeLaunchOptions { Headless = false });
+                new BrowserTypeLaunchOptions { Headless = false }); // TODO: put in settings file 
 
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();

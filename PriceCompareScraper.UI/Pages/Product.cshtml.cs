@@ -51,6 +51,9 @@ public class ProductModel : ModelBase<ProductModel>
         Image = Images[Index];
         Title = GetTitleFromImage(Image);
 
+        await SetSites(fromCache: false); // delays the load, temp until UI update code is done
+        return;
+
         if (_cache.TryGet(eCacheKeys.Prices, out string pricesJson, eCacheType.All))
         {
             await SetSites(fromCache: true, pricesJson);
