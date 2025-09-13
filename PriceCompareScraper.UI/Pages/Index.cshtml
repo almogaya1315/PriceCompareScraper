@@ -11,14 +11,14 @@
 
     <div class="pager">
         <div class="img-wrap">
-
-            <a href="/Product?id=@Model.Index">
+            <a href="/Product?Index=@Model.Index">
                 <img src="/@Model.CurrentImage" alt="Index: @Model.Index" />
             </a>
             <div>
-                <a href="/Product?id=@Model.Index">View Prices</a>
-            </div>
+                <a href="/Product?Index=@Model.Index">View Prices</a>
+            </div> 
         </div>
+        
         <div class="controls">
             @if (Model.Index > 0)
             {
@@ -29,7 +29,8 @@
                 <button class="btn disabled" disabled>◀ Previous</button>
             }
 
-            <span class="counter">@((Model.Index + 1))</span>
+            <span class="counter">@((Model.Index + 1))</span>/
+            <span class="counter">@((Model.Count))</span>
 
             @if (Model.Index < Model.Count - 1)
             {

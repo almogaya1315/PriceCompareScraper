@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -17,53 +17,41 @@ public class ProductModel : ModelBase<ProductModel>
     private string[] Images;
 
     [BindProperty(SupportsGet = true)]
-    public int Id { get; set; }
+    public int Index { get; set; }
+
+    //public int DbId { get; set; } // Index+1
 
     public string Image { get; private set; }
     public string Title { get; private set; }
 
-    public Dictionary<string, string> PriceSites => new()
+    public List<(string Name, string Price, string Url)> PriceSites => new()
     {
-        { "Zap", "?1,999" },
-        { "PriceCheck", "?1,950" },
-        { "Geedo", "?2,050" },
-        { "Google Shopping IL", "?1,980" },
-        { "ShopX", "?1,970" }
+        ("Zap", "₪1,999", ""),
+        ("PriceCheck", "₪1,950", ""),
+        ("Geedo", "₪2,050", ""),
+        ("Google Shopping IL", "₪1,980", ""),
+        ("ShopX", "₪1,970", "")
     };
 
     public void OnGet()
     {
-        SetImages();
-        Id = Indexer();
-        Image = Images[Id];
+        SetContext(HttpContext);
+        Images = SetImages();
+        Index = Indexer(Images, Index);
+
+        Image = Images[Index];
         Title = GetTitleFromImage(Image);
-    }
-
-    private void SetImages()
-    {
-        string imagesJson;
-        if (_session.TryGet(eSessionKeys.Images, out imagesJson))
-        {
-            Images = JsonConvert.DeserializeObject<string[]>(imagesJson);
-        }
-        else
-        {
-            // Error if Product.cshtml is called without session containing eSessionKeys.Images
-        }
-    }
-
-    private int Indexer()
-    {
-        return Id < 0
-               ? 0
-               : (Id >= Images.Length
-               ? Images.Length - 1
-               : Id);
     }
 
     private string GetTitleFromImage(string imagePath)
     {
         var fileName = Path.GetFileName(imagePath);
-        return Path.GetFileNameWithoutExtension(fileName).Replace("-", " ");
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+        var lastUnderscoreIndex = fileNameWithoutExtension.LastIndexOf('_');
+        var title = lastUnderscoreIndex != -1 ? fileNameWithoutExtension.Substring(0, lastUnderscoreIndex) : fileNameWithoutExtension;
+
+        //DbId = lastUnderscoreIndex != -1 ? int.Parse(fileNameWithoutExtension.Substring(lastUnderscoreIndex + 1)) : 0;
+
+        return title.Replace("-", " ");
     }
 }

@@ -8,7 +8,7 @@
     <h1>@Model.Title</h1>
     <div class="product-details">
         <div class="img-wrap">
-            <img src="/@Model.Image" alt="@Model.Title" />
+            <img class="product-img" src="/@Model.Image" alt="@Model.Title" />
         </div>
         <div class="price-table">
             <h2>Prices</h2>
@@ -17,14 +17,20 @@
                     <tr>
                         <th>Site</th>
                         <th>Price</th>
+                        @* <th class="invisible-header"></th>  *@
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var priceSite in Model.PriceSites)
                     {
                         <tr>
-                            <td>@priceSite.Key</td>
-                            <td>@priceSite.Value</td>
+                            <td>
+                                <a href="@priceSite.Url" >
+                                    @priceSite.Name
+                                </a>
+                            </td>
+                            <td>@priceSite.Price</td>
+                            @* <td class="invisible-btn" href="#">Refresh</td> *@
                         </tr>
                     }
                 </tbody>
@@ -32,6 +38,6 @@
         </div>
     </div>
     <div class="mt-4">
-        <a class="btn btn-secondary" href="/">◀ Back to Gallery</a>
+        <a class="btn btn-secondary" href="/?Index=@Model.Index">◀ Back to Gallery</a>
     </div>
 </div>
