@@ -5,6 +5,7 @@ using PriceCompareScraper.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -17,18 +18,28 @@ namespace PriceCompareScraper.Core.Services
         private static string GetSearchWord(SiteModel site, eProducts eProduct)
         {
             var searchWord = eProduct.ToString();
-            if (site.Name == "Zap")
+            if (site.Name == eSiteNames.Zap)
             {
-                searchWord = GetEnumDescription(eProduct);
+                //searchWord = GetEnumDescription(eProduct);
+                if (eProduct == eProducts.Microwave)
+                    searchWord = eProduct.ToString() + "Oven"; 
+                if (eProduct == eProducts.Ninja)
+                    searchWord = "foodproccessor&db136390=10840000";
             }
             return searchWord;
         }
-        private static string GetEnumDescription(eProducts eProduct)
+        //private static string GetEnumDescription(eProducts eProduct)
+        //{
+        //    var field = eProduct.GetType().GetField(eProduct.ToString());
+        //    var attribute = field?.GetCustomAttributes(typeof(DescriptionAttribute), false)
+        //                          .Cast<DescriptionAttribute>().FirstOrDefault();
+        //    return attribute?.Description ?? eProduct.ToString();
+        //}
+
+        private static string BaseUrl(SiteModel site)
         {
-            var field = eProduct.GetType().GetField(eProduct.ToString());
-            var attribute = field?.GetCustomAttributes(typeof(DescriptionAttribute), false)
-                                  .Cast<DescriptionAttribute>().FirstOrDefault();
-            return attribute?.Description ?? eProduct.ToString();
+            var baseUri = new Uri(site.BaseUrl);
+            return $"{baseUri.Scheme}://{baseUri.Host}/";
         }
 
         public static async Task SetSite(SiteModel site, eProducts eProduct)
@@ -38,21 +49,62 @@ namespace PriceCompareScraper.Core.Services
 
             using var pw = await Playwright.CreateAsync();
             await using var browser = await pw.Chromium.LaunchAsync(
-                new BrowserTypeLaunchOptions { Headless = true });
+                new BrowserTypeLaunchOptions { Headless = false });
 
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
             await page.GotoAsync(site.BaseUrl);
 
-            // find the price in this html
-            if (site.BaseUrl != page.Url)
+            //Zap
+            var toProduct = page.Locator(".zap-btn-compare:not(.to-compare-list-btn)");
+            //ninja
+            if (await toProduct.CountAsync() == 0)
             {
-
+                toProduct = page.Locator(".OptionClicks3.zap-btn").First;
+                site.FinalUrl = BaseUrl(site) + await toProduct.GetAttributeAsync("href");
+                var price = page.Locator(".price-wrapper.product.total").InnerTextAsync().Result.Replace("₪", "");
             }
+            //dishwasher
+            //microwave
+            else
+            {
+                await toProduct.First.ClickAsync();
+                site.FinalUrl = page.Url;
+                var price = page.Locator(".price-value.total").InnerTextAsync().Result.Replace("₪", "");
+                site.Price = site.Price.Remove(1) + price;
+            }
+                
+            //oven
+            //fridge
 
-            site.FinalUrl = page.Url;
-            site.Price = "";
+            //Payngo
+            //dishwasher
+            //microwave
+            //ninja
+            //oven
+            //fridge
+
+            //Rozenfeld
+            //dishwasher
+            //microwave
+            //ninja
+            //oven
+            //fridge
+
+            //Alm
+            //dishwasher
+            //microwave
+            //ninja
+            //oven
+            //fridge
+
+            //ShekemElectric
+            //dishwasher
+            //microwave
+            //ninja
+            //oven
+            //fridge
         }
     }
 }

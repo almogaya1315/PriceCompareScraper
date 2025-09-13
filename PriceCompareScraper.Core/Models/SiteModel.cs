@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PriceCompareScraper.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace PriceCompareScraper.Core.Models
 {
     public class SiteModel
     {
-        public SiteModel(string name, string price, string baseUrl)
+        public SiteModel(eSiteNames name, string price, string baseUrl)
         {
             Name = name;
             Price = price;
@@ -16,7 +17,7 @@ namespace PriceCompareScraper.Core.Models
             FinalUrl = string.Empty;
         }
 
-        public string Name { get; set; }
+        public eSiteNames Name { get; set; }
         public string Price { get; set; }
         public string BaseUrl { get; set; }
         public string FinalUrl { get; set; }

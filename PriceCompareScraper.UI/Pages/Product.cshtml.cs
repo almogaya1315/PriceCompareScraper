@@ -31,11 +31,12 @@ public class ProductModel : ModelBase<ProductModel>
 
     public List<SiteModel> Sites => new()
     {
-        new SiteModel("Zap", "₪price", "https://www.zap.co.il/search.aspx?keyword=SearchWord&orderby=price"),
-        new SiteModel("payngo", "₪price", "https://www.payngo.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max"),
-        new SiteModel("rozenfeld", "₪price", "https://www.rozenfeld.co.il/?s=SearchWord"),
-        new SiteModel("ALM", "₪price", "https://www.alm.co.il/search.html?query=SearchWord"),
-        new SiteModel("ShopX", "₪price", "https://www.shekem-electric.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max")
+        new SiteModel(eSiteNames.Zap, "₪price", "https://www.zap.co.il/models.aspx?sog=e-SearchWord&orderby=price"),
+        //new SiteModel("Zap", "₪price", "https://www.zap.co.il/search.aspx?keyword=SearchWord&orderby=price"),
+        new SiteModel(eSiteNames.Payngo, "₪price", "https://www.payngo.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max"),
+        new SiteModel(eSiteNames.Rozenfeld, "₪price", "https://www.rozenfeld.co.il/?s=SearchWord"),
+        new SiteModel(eSiteNames.Alm, "₪price", "https://www.alm.co.il/search.html?query=SearchWord"),
+        new SiteModel(eSiteNames.ShekemElectric, "₪price", "https://www.shekem-electric.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max")
     };
 
     public async Task OnGet()
