@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35818.85 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompareScraper.UI", "PriceCompareScraper.UI\PriceCompareScraper.UI.csproj", "{428EDB8D-66EA-4F09-BE33-F2A30D17780D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompareScraper.Core", "PriceCompareScraper.Core\PriceCompareScraper.Core.csproj", "{3C411731-90BE-4C20-A78D-23C678932910}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{428EDB8D-66EA-4F09-BE33-F2A30D17780D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{428EDB8D-66EA-4F09-BE33-F2A30D17780D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{428EDB8D-66EA-4F09-BE33-F2A30D17780D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C411731-90BE-4C20-A78D-23C678932910}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C411731-90BE-4C20-A78D-23C678932910}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C411731-90BE-4C20-A78D-23C678932910}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C411731-90BE-4C20-A78D-23C678932910}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

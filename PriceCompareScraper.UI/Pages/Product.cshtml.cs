@@ -1,18 +1,20 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
+using PriceCompareScraper.Core.Bases;
+using PriceCompareScraper.Core.Enums;
 
 namespace PriceCompareScraper.UI.Pages;
 
-public class ProductModel : PageModel
+public class ProductModel : ModelBase<ProductModel>
 {
-    private readonly string[] Images = new[]
+    public ProductModel(ILogger<ProductModel> logger) : base(logger)
     {
-        "Images\\Dishwasher.jpg",
-        "Images\\Microwave.jpg",
-        "Images\\Ninja.jpg",
-        "Images\\Oven.jpg",
-        "Images\\Refrigirator.jpg",
-    };
+        // ctor
+    }
+
+    private string[] Images;
 
     [BindProperty(SupportsGet = true)]
     public int Id { get; set; }
@@ -31,9 +33,23 @@ public class ProductModel : PageModel
 
     public void OnGet()
     {
+        SetImages();
         Id = Indexer();
         Image = Images[Id];
         Title = GetTitleFromImage(Image);
+    }
+
+    private void SetImages()
+    {
+        string imagesJson;
+        if (_session.TryGet(eSessionKeys.Images, out imagesJson))
+        {
+            Images = JsonConvert.DeserializeObject<string[]>(imagesJson);
+        }
+        else
+        {
+            // Error if Product.cshtml is called without session containing eSessionKeys.Images
+        }
     }
 
     private int Indexer()
