@@ -21,11 +21,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var priceSite in Model.PriceSites)
+                    @foreach (var priceSite in Model.Sites)
                     {
                         <tr>
                             <td>
-                                <a href="@priceSite.Url" >
+                                <a href="@priceSite.FinalUrl" >
                                     @priceSite.Name
                                 </a>
                             </td>

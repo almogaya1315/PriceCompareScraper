@@ -4,14 +4,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using PriceCompareScraper.Core.Bases;
 using PriceCompareScraper.Core.Enums;
+using PriceCompareScraper.Core.Models;
+using PriceCompareScraper.Core.Services;
+using System.Threading.Tasks;
 
 namespace PriceCompareScraper.UI.Pages;
 
 public class ProductModel : ModelBase<ProductModel>
 {
+    private readonly List<eProducts> _products;
+
     public ProductModel(ILogger<ProductModel> logger) : base(logger)
     {
-        // ctor
+        _products = Enum.GetValues(typeof(eProducts)).Cast<eProducts>().ToList();
     }
 
     private string[] Images;
@@ -24,16 +29,16 @@ public class ProductModel : ModelBase<ProductModel>
     public string Image { get; private set; }
     public string Title { get; private set; }
 
-    public List<(string Name, string Price, string Url)> PriceSites => new()
+    public List<SiteModel> Sites => new()
     {
-        ("Zap", "₪1,999", ""),
-        ("PriceCheck", "₪1,950", ""),
-        ("Geedo", "₪2,050", ""),
-        ("Google Shopping IL", "₪1,980", ""),
-        ("ShopX", "₪1,970", "")
+        new SiteModel("Zap", "₪price", "https://www.zap.co.il/search.aspx?keyword=SearchWord&orderby=price"),
+        new SiteModel("payngo", "₪price", "https://www.payngo.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max"),
+        new SiteModel("rozenfeld", "₪price", "https://www.rozenfeld.co.il/?s=SearchWord"),
+        new SiteModel("ALM", "₪price", "https://www.alm.co.il/search.html?query=SearchWord"),
+        new SiteModel("ShopX", "₪price", "https://www.shekem-electric.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max")
     };
 
-    public void OnGet()
+    public async Task OnGet()
     {
         SetContext(HttpContext);
         Images = SetImages();
@@ -41,6 +46,18 @@ public class ProductModel : ModelBase<ProductModel>
 
         Image = Images[Index];
         Title = GetTitleFromImage(Image);
+
+        await SetSites();
+    }
+
+    private async Task SetSites()
+    {
+        for (int i = 0; i < Sites.Count; i++)
+        {
+            var site = Sites.ElementAt(i);
+            var eProduct = _products.Find(p => (int)p == Index + 1);
+            await Scrapper.SetSite(site, eProduct);
+        }
     }
 
     private string GetTitleFromImage(string imagePath)
