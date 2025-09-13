@@ -11,6 +11,12 @@ namespace PriceCompareScraper.UI.Pages;
 
 public class IndexModel : ModelBase<IndexModel>
 {
+    // TODO: Validation & Security on client, server & DB
+    // TODO: User & Traffic authentication & storing
+    // TODO: Traffic capture & statistics
+    // TODO: Add & banners
+
+
     public IndexModel(ILogger<IndexModel> logger) : base(logger)
     {
         // ctor

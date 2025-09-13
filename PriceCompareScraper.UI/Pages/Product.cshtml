@@ -21,15 +21,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var priceSite in Model.Sites)
+                    @foreach (var site in Model.Sites)
                     {
                         <tr>
                             <td>
-                                <a href="@priceSite.FinalUrl" >
-                                    @priceSite.Name
+                                <a href="@site.FinalUrl">
+                                    @site.Name
                                 </a>
                             </td>
-                            <td>@priceSite.Price</td>
+                            <td>@site.Price</td>
                             @* <td class="invisible-btn" href="#">Refresh</td> *@
                         </tr>
                     }

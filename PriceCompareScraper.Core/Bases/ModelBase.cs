@@ -16,7 +16,7 @@ namespace PriceCompareScraper.Core.Bases
     public abstract class ModelBase<T> : PageModel
     {
         protected readonly ILogger<T> _logger;
-        protected SessionHandler _session;
+        protected CacheHandler _cache;
 
         public ModelBase(ILogger<T> logger)
         {
@@ -25,13 +25,13 @@ namespace PriceCompareScraper.Core.Bases
 
         protected void SetContext(HttpContext context)
         {
-            _session = new SessionHandler(context);
+            _cache = new CacheHandler(context);
         }
 
         protected string[] SetImages(bool init = false)
         {
             string[] images = [];
-            if (_session.TryGet(eSessionKeys.Images, out string imagesJson))
+            if (_cache.TryGet(eCacheKeys.Images, out string imagesJson, eCacheType.Session))
             {
                 images = JsonConvert.DeserializeObject<string[]>(imagesJson);
             }
@@ -41,7 +41,7 @@ namespace PriceCompareScraper.Core.Bases
             }
             else
             {
-                // Error if Product.cshtml is called without session containing eSessionKeys.Images
+                // Error if Product.cshtml is called without session containing eCacheKeys.Images
             }
             return images;
         }
@@ -50,6 +50,7 @@ namespace PriceCompareScraper.Core.Bases
         {
             string[] images =
                 [
+                    // TODO: Make Persistent SQL
                     "Images\\Dishwasher_1.jpg",
                     "Images\\Microwave_2.jpg",
                     "Images\\Ninja_3.jpg",
@@ -57,7 +58,7 @@ namespace PriceCompareScraper.Core.Bases
                     "Images\\Refrigirator_5.jpg",
                 ];
             var imagesJson = JsonConvert.SerializeObject(images);
-            _session.Set(eSessionKeys.Images, imagesJson);
+            _cache.Set(eCacheKeys.Images, imagesJson, eCacheType.Session);
             return images;
         }
 

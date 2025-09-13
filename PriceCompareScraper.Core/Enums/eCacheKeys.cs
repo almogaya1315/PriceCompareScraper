@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace PriceCompareScraper.Core.Enums
 {
-    public enum eSessionKeys
+    public enum eCacheKeys
     {
-        Images
+        Images = 1,
+        Prices = 2
     }
 }

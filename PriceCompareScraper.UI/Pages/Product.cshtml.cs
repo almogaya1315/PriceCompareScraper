@@ -29,15 +29,18 @@ public class ProductModel : ModelBase<ProductModel>
     public string Image { get; private set; }
     public string Title { get; private set; }
 
-    public List<SiteModel> Sites => new()
+    private List<SiteModel> _sites;
+    public List<SiteModel> Sites
     {
-        new SiteModel(eSiteNames.Zap, "₪price", "https://www.zap.co.il/models.aspx?sog=e-SearchWord&orderby=price"),
-        //new SiteModel("Zap", "₪price", "https://www.zap.co.il/search.aspx?keyword=SearchWord&orderby=price"),
-        new SiteModel(eSiteNames.Payngo, "₪price", "https://www.payngo.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max"),
-        new SiteModel(eSiteNames.Rozenfeld, "₪price", "https://www.rozenfeld.co.il/?s=SearchWord"),
-        new SiteModel(eSiteNames.Alm, "₪price", "https://www.alm.co.il/search.html?query=SearchWord"),
-        new SiteModel(eSiteNames.ShekemElectric, "₪price", "https://www.shekem-electric.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max")
-    };
+        get
+        {
+            return _sites;
+        }
+        set
+        {
+            _sites = value;
+        }
+    }
 
     public async Task OnGet()
     {
@@ -48,16 +51,52 @@ public class ProductModel : ModelBase<ProductModel>
         Image = Images[Index];
         Title = GetTitleFromImage(Image);
 
-        await SetSites();
+        if (_cache.TryGet(eCacheKeys.Prices, out string pricesJson, eCacheType.All))
+        {
+            await SetSites(fromCache: true, pricesJson);
+        }
+        else
+        {
+            _ = Task.Run(async () =>
+            {
+                await SetSites(fromCache: false);
+                var pricesJson = JsonConvert.SerializeObject(Sites);
+                _cache.Set(eCacheKeys.Prices, pricesJson, eCacheType.All);
+
+                // TODO: make the cookies storage update every hour
+
+                // TODO: when the function is done, update the UI 
+                // 1: SignalR, websockets
+                // 2: Polling ()
+            });
+        }
     }
 
-    private async Task SetSites()
+    private async Task SetSites(bool fromCache, string? pricesJson = null)
     {
-        for (int i = 0; i < Sites.Count; i++)
+        if (fromCache && !string.IsNullOrWhiteSpace(pricesJson))
         {
-            var site = Sites.ElementAt(i);
-            var eProduct = _products.Find(p => (int)p == Index + 1);
-            await Scrapper.SetSite(site, eProduct);
+            Sites = JsonConvert.DeserializeObject<List<SiteModel>>(pricesJson);
+        }
+        else
+        {
+            Sites = new()
+            {
+                // TODO: Make Persistent SQL
+                // TODO: Move to ModelBase
+                new SiteModel(eSiteNames.Zap, "₪price", "https://www.zap.co.il/models.aspx?sog=e-SearchWord&orderby=price"),
+                new SiteModel(eSiteNames.Payngo, "₪price", "https://www.payngo.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max"),
+                new SiteModel(eSiteNames.Rozenfeld, "₪price", "https://www.rozenfeld.co.il/?s=SearchWord"),
+                new SiteModel(eSiteNames.Alm, "₪price", "https://www.alm.co.il/search.html?query=SearchWord"),
+                new SiteModel(eSiteNames.ShekemElectric, "₪price", "https://www.shekem-electric.co.il/instantsearchplus/result?q=SearchWord&sort=price_min_to_max")
+            };
+
+            for (int i = 0; i < Sites.Count; i++)
+            {
+                var site = Sites.ElementAt(i);
+                var eProduct = _products.Find(p => (int)p == Index + 1);
+                site = await Scrapper.SetSite(site, eProduct);
+            }
         }
     }
 
